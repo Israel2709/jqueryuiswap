@@ -3,6 +3,9 @@ var draggedIndex;
 var droppableId;
 var droppableIndex;
 var draggedItem;
+var allowDrop;
+var draggedSize;
+var droppableSize;
 var itemsLength = $(".draggable-item").length;
 console.log(itemsLength);
 
@@ -11,6 +14,7 @@ $(".draggable-item").draggable({
     start: function(event, ui) {
         draggedItem = $(event.target);
         draggedId = draggedItem.attr("id");
+        draggedSize = draggedItem.data("item-size")
         console.log("draged id" + draggedId)
         draggedIndex = draggedItem.index();
         console.log("dragged index " + draggedIndex);
@@ -20,12 +24,18 @@ $(".draggable-item").draggable({
 $(".draggable-item").droppable({
     addClasses: false,
     over: function(event, ui) {
-        var droppableItem = $(event.target)
+    	allowDrop = true;
+        var droppableItem = $(event.target);
+        var droppableSize = droppableItem.data("item-size");
         droppableItem.addClass("overed")
         droppableId = droppableItem.attr("id");
         droppableIndex = droppableItem.index();
-        console.log("droppable id " + droppableId);
-        console.log("droppableIndex " + droppableIndex);
+        console.log("dragged size "+draggedSize);
+        console.log("droppable-size "+droppableSize);
+        if(draggedSize < droppableSize){
+        	allowDrop = false;
+        	console.log(allowDrop)
+        }
     },
     out: function(event,ui){
     	$(event.target).removeClass("overed")
@@ -41,14 +51,18 @@ $(".draggable-item").droppable({
             left: 0,
             background: "teal"
         });
-        if (draggedIndex > droppableIndex && draggedIndex == itemsLength-1) {
+        if (allowDrop == false){
+        	draggedItem.css({
+        		top:0,
+        		left:0
+        	})
+        } else if (draggedIndex > droppableIndex && draggedIndex == itemsLength-1) {
         	console.log("dropping last");
             draggedItem.insertBefore(dropTarget)
             setTimeout(function() {
                 $(".draggable-elements-wrapper").append(dropTarget)
             }, 1)
-        }
-        if (draggedIndex > droppableIndex) {
+        } else if (draggedIndex > droppableIndex) {
             draggedItem.insertBefore(dropTarget)
             setTimeout(function() {
                 dropTarget.insertBefore($(".draggable-item:eq(" + (draggedIndex + 1) + ")"));

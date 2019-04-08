@@ -6,6 +6,7 @@ var draggedItem;
 var allowDrop;
 var draggedSize;
 var droppableSize;
+var rowSlots;
 var itemsLength = $(".draggable-item").length;
 console.log(itemsLength);
 
@@ -36,6 +37,10 @@ $(".draggable-item").droppable({
         	allowDrop = false;
         	console.log(allowDrop)
         }
+        slotCount = countSlots(droppableItem, droppableIndex);
+        console.log("slotCount "+slotCount)
+        rowSlots = slotCount + draggedItem.data("item-size");
+        console.log(rowSlots % 4)
     },
     out: function(event,ui){
     	$(event.target).removeClass("overed")
@@ -51,7 +56,20 @@ $(".draggable-item").droppable({
             left: 0,
             background: "teal"
         });
+        console.log("overed lenght "+ $(".overed").length)
+
         if (allowDrop == false){
+        	draggedItem.css({
+        		top:0,
+        		left:0
+        	})
+        } else if(rowSlots % 4 != 0){
+        	draggedItem.css({
+	            top: 0,
+	            left: 0,
+	            background: "red"
+	        });
+        } else if($(".overed").length == 0){
         	draggedItem.css({
         		top:0,
         		left:0
@@ -76,3 +94,13 @@ $(".draggable-item").droppable({
         $(".draggable-item").removeClass("overed")
     }
 });
+
+function countSlots(overedItem, overedIndex){
+	var slotCount = 0;
+	for(i = 0; i < overedIndex; i++){
+		var currentItemSize = $(".draggable-item:eq("+i+")").data("item-size");
+		slotCount = slotCount + currentItemSize;
+		console.log(slotCount)
+	}
+	return slotCount
+}

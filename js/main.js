@@ -19,15 +19,25 @@ $(".draggable-item").draggable({
         console.log("draged id" + draggedId)
         draggedIndex = draggedItem.index();
         console.log("dragged index " + draggedIndex);
+    },
+    stop:function(event,ui){
+    	console.log("drag end")
+    	if($(".overed").length == 0){
+        	$(event.target).css({
+        		top:0,
+        		left:0
+        	})
+        }
     }
 });
 
 $(".draggable-item").droppable({
     addClasses: false,
+    tolerance:"pointer",
     over: function(event, ui) {
     	allowDrop = true;
         var droppableItem = $(event.target);
-        var droppableSize = droppableItem.data("item-size");
+        droppableSize = droppableItem.data("item-size");
         droppableItem.addClass("overed")
         droppableId = droppableItem.attr("id");
         droppableIndex = droppableItem.index();
@@ -35,7 +45,6 @@ $(".draggable-item").droppable({
         console.log("droppable-size "+droppableSize);
         if(draggedSize < droppableSize){
         	allowDrop = false;
-        	console.log(allowDrop)
         }
         slotCount = countSlots(droppableItem, droppableIndex);
         console.log("slotCount "+slotCount)
@@ -56,24 +65,19 @@ $(".draggable-item").droppable({
             left: 0,
             background: "teal"
         });
-        console.log("overed lenght "+ $(".overed").length)
+        console.log("overed length "+ $(".overed").length)
 
         if (allowDrop == false){
         	draggedItem.css({
         		top:0,
         		left:0
         	})
-        } else if(rowSlots % 4 != 0){
+        } else if(draggedSize != droppableSize && rowSlots % 4 != 0){
         	draggedItem.css({
 	            top: 0,
 	            left: 0,
 	            background: "red"
 	        });
-        } else if($(".overed").length == 0){
-        	draggedItem.css({
-        		top:0,
-        		left:0
-        	})
         } else if (draggedIndex > droppableIndex && draggedIndex == itemsLength-1) {
         	console.log("dropping last");
             draggedItem.insertBefore(dropTarget)

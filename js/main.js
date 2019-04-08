@@ -21,10 +21,14 @@ $(".draggable-item").droppable({
     addClasses: false,
     over: function(event, ui) {
         var droppableItem = $(event.target)
+        droppableItem.addClass("overed")
         droppableId = droppableItem.attr("id");
         droppableIndex = droppableItem.index();
         console.log("droppable id " + droppableId);
         console.log("droppableIndex " + droppableIndex);
+    },
+    out: function(event,ui){
+    	$(event.target).removeClass("overed")
     },
     drop: function(event, ui) {
         var dropTarget = $(event.target);
@@ -55,5 +59,6 @@ $(".draggable-item").droppable({
                 dropTarget.insertBefore($(".draggable-item:eq(" + draggedIndex + ")"));
             }, 1)
         }
+        $(".draggable-item").removeClass("overed")
     }
 });

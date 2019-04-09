@@ -38,11 +38,11 @@ $(".draggable-item").droppable({
         droppableItem.addClass("overed"); /*agregamos una clase para mostrar sobre qué elemento nos encontramos*/
         droppableId = droppableItem.attr("id"); /*obtenemos el id del objeto receptor*/
         droppableIndex = droppableItem.index(); /*obtenemos el índice del objeto receptor*/
-        if(draggedSize < droppableSize){ /*impedimos que un objeto se pueda soltar sobre un receptor que sea más grande que él*/
-        	allowDrop = false;
-        }
         slotCount = countSlots(droppableItem, droppableIndex); /*mediante una función obtenemos la cantidad de espacios ocupados antes del elemento receptor (ver notas en la función)*/
         rowSlots = slotCount + draggedItem.data("item-size"); /*sumamos los slots ocupados antes del receptor y el tamaño del item arrastrado para validar si cabe en la misma fila*/
+        if(draggedSize < droppableSize){ /*impedimos que un objeto se pueda soltar sobre un receptor que sea más grande que él*/
+        	allowDrop = false;
+        } 
     },
     out: function(event,ui){
     	$(event.target).removeClass("overed") /*cuando salimos de un elemento receptor le quitamos la clase "overed"*/
@@ -99,7 +99,6 @@ function countSlots(overedItem, overedIndex){
 	for(i = 0; i < overedIndex; i++){
 		var currentItemSize = $(".draggable-item:eq("+i+")").data("item-size");
 		slotCount = slotCount + currentItemSize;
-		console.log(slotCount)
 	}
 	return slotCount
 }

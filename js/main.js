@@ -50,6 +50,7 @@ $(".draggable-item").droppable({
             allowDrop = false;
         }
         if (draggedSize > droppableSize) {
+            console.log("over largo sobre elemento corto");
             sizeDifference = draggedSize - droppableSize;
             console.log("size difference " + sizeDifference);
             var nextItem = droppableItem.next(".draggable-item");
@@ -68,8 +69,12 @@ $(".draggable-item").droppable({
                     if (sizeDifference == nextItemSize) {
                         setTimeout(function() {
                             nextItem.addClass("overed");
-                            if(sizeDifference != 0){
-                                allowDrop = false
+                            if(sizeDifference - nextItemSize != 0){
+                                console.log("sigue sin caber");
+                                allowDrop = false;
+                            } else {
+                                console.log("ya cupo");
+                                allowDrop = true;
                             }
                         }, 20)
                     } else {
@@ -110,6 +115,32 @@ $(".draggable-item").droppable({
                        background: "red"
                    });
                }*/
+        else if ($(".draggable-item.overed").length > 1){
+            console.log("elemento largo sobre corto");
+            var draggableArray = [];
+            $(".draggable-item.overed").each(function(index,element){
+                draggableArray.push($(element).attr("id"));
+            });
+            if(draggedIndex > droppableIndex){
+                console.log("esta después");
+                draggedItem.insertBefore(dropTarget)
+                for (i =0; i< draggableArray.length; i++){
+                    console.log(draggableArray);
+                    console.log(draggableArray[i]);
+                    $("#"+draggableArray[i]).insertBefore($(".draggable-item:eq(" + (draggedIndex + 1) + ")")); /*tenemos que sumarle 1 a la posición en la que será insertado el elemento receptor, debido al orden en el que se ejecuta el intercambio de elementos*/
+                }
+            } else {
+                console.log("esta antes");
+                draggedItem.insertBefore(dropTarget)
+                draggableArray.reverse();
+                for (i =0; i< draggableArray.length; i++){
+                    console.log(draggableArray);
+                    console.log(draggableArray[i]);
+                    $("#"+draggableArray[i]).insertBefore($(".draggable-item:eq(" + (draggedIndex) + ")")); /*tenemos que sumarle 1 a la posición en la que será insertado el elemento receptor, debido al orden en el que se ejecuta el intercambio de elementos*/
+                }
+            }
+            
+        }
         else if (draggedIndex > droppableIndex && draggedIndex == itemsLength - 1) { /* si el elemento que arrastramos es el último item en el grid, tenemos que hacer un tratamiento especial*/
             draggedItem.insertBefore(dropTarget) /*insertamos el elemento que arrastramos en la posición del elemento receptor*/
             setTimeout(function() {

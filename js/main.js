@@ -17,6 +17,18 @@ $(".draggable-item").draggable({
         draggedId = draggedItem.attr("id"); /*obtenemos el id del objeto que arrastramos*/
         draggedSize = draggedItem.data("item-size") /*obtenemos el tamaño del elemento que arrastramos*/
         draggedIndex = draggedItem.index(); /*obtenemos el índice del objeto que arrastramos*/
+        //draggedItem.addClass("being-dragged")
+        console.log(draggedItem.position());
+        var widgetPosition = draggedItem.offset();
+        var widgetWidth = draggedItem.outerWidth();
+        var widgetHeight = draggedItem.outerHeight();
+        $(".drag-shadow").css({
+            top:widgetPosition.top,
+            left:widgetPosition.left,
+            width:widgetWidth,
+            height:widgetHeight,
+            opacity:1
+        })
     },
     stop: function(event, ui) { /*cuando termina el arrastre de un objeto*/
         if ($(".overed").length == 0) { /*si el item fue soltado fuera de otro item*/
@@ -25,6 +37,9 @@ $(".draggable-item").draggable({
                 left: 0
             })
         }
+        $(".drag-shadow").css({
+            opacity:0
+        })
     }
 });
 

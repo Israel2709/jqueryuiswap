@@ -10,6 +10,8 @@ var rowSlots; /*cantidad de espacios ocupados antes de la posición del elemento
 var itemsLength = $(".draggable-item").length; /*Catidad de items en el grid*/
 console.log(itemsLength);
 
+
+
 $(".draggable-item").draggable({
     addClasses: false,
     start: function(event, ui) { /*cuando se inicia el arrastre de un objeto*/
@@ -49,9 +51,16 @@ $(".draggable-item").droppable({
     /*activa un elemento receptor cuando el cursor se encuentra dentro de él*/
     over: function(event, ui) {
         var sizeDifference;
+        var totalIndex = 0;
         allowDrop = true; /*permite soltar solo si hay un item sobre otro item*/
         var droppableItem = $(event.target); /*creamos el objeto receptor*/
         droppableSize = droppableItem.data("item-size"); /*obtenemos el tamaño del objeto receptor*/
+        $(droppableItem).prevAll(".draggable-item").each(function(element){
+            //console.log($(this).data("item-size"));
+            var siblingSize = $(this).data("item-size");
+            totalIndex = totalIndex + siblingSize;
+            //console.log("total index " + totalIndex)
+        })
         $(".draggable-item").removeClass("overed");
         setTimeout(function() {
             droppableItem.addClass("overed"); /*agregamos una clase para mostrar sobre qué elemento nos encontramos*/
@@ -64,7 +73,12 @@ $(".draggable-item").droppable({
             console.log("allow drop denied");
             allowDrop = false;
         }
-        if (draggedSize > droppableSize) {
+        else if (((totalIndex + droppableSize) % 4 == 0) && draggedSize > droppableSize){
+            console.log("estas sobre el último de la fila y el dragged es mayor que el dropped");
+            allowDrop = false;
+            //alert("son del mismo tamaño");
+        }
+        else if (draggedSize > droppableSize) {
             console.log("over largo sobre elemento corto");
             sizeDifference = draggedSize - droppableSize;
             console.log("size difference " + sizeDifference);
